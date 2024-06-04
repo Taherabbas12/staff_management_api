@@ -89,11 +89,11 @@ class ClientsController extends Controller
         return response()->json(['message' => 'Client deleted successfully'], 200);
     }
  
-    private function uploadImageIfExists($request, &$client, $fieldName)
-    {
-        if ($request->hasFile($fieldName)) {
-            $client->$fieldName = $request->file($fieldName)->store('images');
-        }
+   private function uploadImageIfExists($request, &$client, $fieldName)
+{
+    if ($request->hasFile($fieldName)) {
+        $client->$fieldName = $request->file($fieldName)->store('images', 'public');
     }
+}
 }
 
