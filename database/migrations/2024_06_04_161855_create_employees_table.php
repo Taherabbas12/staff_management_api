@@ -12,6 +12,7 @@ return new class extends Migration
    public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
+            $table->id('employeesID');
             $table->decimal('salary', 10, 2);
             $table->decimal('nominal_salary', 10, 2);
             $table->integer('number_of_children');
