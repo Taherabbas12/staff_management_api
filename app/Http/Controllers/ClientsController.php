@@ -8,19 +8,17 @@ use Illuminate\Support\Facades\Validator;
 
 class ClientsController extends Controller
 {
-  
-  
     public function index()
     {
         $clients = Client::all();
         return response()->json(['data' => $clients], 200);
     }
 
- 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'location' => 'required|string',
             'email' => 'required|email|unique:clients,email',
             'phone1' => 'required|string',
             'phone2' => 'required|string',
@@ -29,6 +27,12 @@ class ClientsController extends Controller
             'profile_image' => 'required|image',
             'id_front_image' => 'required|image',
             'id_back_image' => 'required|image',
+            'salary' => 'required|numeric',
+            'basic_salary' => 'required|numeric',
+            'number_of_wives' => 'required|integer',
+            'number_of_children' => 'required|integer',
+            'employment_type' => 'required|string',
+            'salary_increase' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -47,17 +51,16 @@ class ClientsController extends Controller
         return response()->json(['message' => 'Client created successfully', 'data' => $client], 201);
     }
 
- 
     public function show(Client $client)
     {
         return response()->json(['data' => $client], 200);
     }
 
-    
     public function update(Request $request, Client $client)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255',
+            'location' => 'nullable|string',
             'email' => 'email|unique:clients,email,' . $client->id,
             'phone1' => 'nullable|string',
             'phone2' => 'nullable|string',
@@ -66,6 +69,12 @@ class ClientsController extends Controller
             'profile_image' => 'nullable|image',
             'id_front_image' => 'nullable|image',
             'id_back_image' => 'nullable|image',
+            'salary' => 'nullable|numeric',
+            'basic_salary' => 'nullable|numeric',
+            'number_of_wives' => 'nullable|integer',
+            'number_of_children' => 'nullable|integer',
+            'employment_type' => 'nullable|string',
+            'salary_increase' => 'nullable|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -81,19 +90,17 @@ class ClientsController extends Controller
         return response()->json(['message' => 'Client updated successfully', 'data' => $client], 200);
     }
 
-  
     public function destroy(Client $client)
     {
         $client->delete();
 
         return response()->json(['message' => 'Client deleted successfully'], 200);
     }
- 
-   private function uploadImageIfExists($request, &$client, $fieldName)
-{
-    if ($request->hasFile($fieldName)) {
-        $client->$fieldName = $request->file($fieldName)->store('images', 'public');
+
+    private function uploadImageIfExists($request, &$client, $fieldName)
+    {
+        if ($request->hasFile($fieldName)) {
+            $client->$fieldName = $request->file($fieldName)->store('images', 'public');
+        }
     }
 }
-}
-
