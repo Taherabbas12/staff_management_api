@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -16,6 +15,23 @@ class IncentiveController extends Controller
     public function index()
     {
         $incentives = Incentive::all();
+        return response()->json(['data' => $incentives], 200);
+    }
+
+    /**
+     * عرض جميع الحوافز لموظف معين بناءً على EmployeeID
+     *
+     * @param  int  $employeeId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getByEmployeeId($employeeId)
+    {
+        $incentives = Incentive::where('EmployeeID', $employeeId)->get();
+
+        if ($incentives->isEmpty()) {
+            return response()->json(['message' => 'لا توجد حوافز لهذا الموظف'], 404);
+        }
+
         return response()->json(['data' => $incentives], 200);
     }
 

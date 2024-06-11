@@ -17,7 +17,6 @@ return new class extends Migration
             $table->decimal('Amount', 10, 2);
             $table->date('DateIssued');
             $table->timestamps();
-
             $table->foreign('EmployeeID')->references('id')->on('clients');
         });
     }
