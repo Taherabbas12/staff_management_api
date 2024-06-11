@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('Description')->nullable();
             $table->decimal('Amount', 10, 2);
             $table->date('DateIssued');
+             $table->unsignedBigInteger('EmployeeID');
+            $table->foreign('EmployeeID')->references('id')->on('clients');
             $table->timestamps();
         });
     }
