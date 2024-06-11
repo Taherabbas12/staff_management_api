@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class IncentiveController extends Controller
 {
     /**
+     * عرض جميع الحوافز
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -19,6 +20,7 @@ class IncentiveController extends Controller
     }
 
     /**
+     * تخزين حافز جديد
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -30,6 +32,7 @@ class IncentiveController extends Controller
             'Description' => 'nullable|string',
             'Amount' => 'required|numeric',
             'DateIssued' => 'required|date',
+            'EmployeeID' => 'required|exists:clients,id', // التحقق من صحة EmployeeID
         ]);
 
         if ($validator->fails()) {
@@ -41,23 +44,25 @@ class IncentiveController extends Controller
         return response()->json(['message' => 'تم إضافة الحافز بنجاح', 'data' => $incentive], 201);
     }
 
-  /**
- *
- * @param  int  $id
- * @return \Illuminate\Http\JsonResponse
- */
-public function show($id)
-{
-    $incentive = Incentive::find($id);
+    /**
+     * عرض حافز معين
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        $incentive = Incentive::find($id);
 
-    if (!$incentive) {
-        return response()->json(['message' => 'الحافز غير موجود'], 404);
+        if (!$incentive) {
+            return response()->json(['message' => 'الحافز غير موجود'], 404);
+        }
+
+        return response()->json(['data' => $incentive], 200);
     }
 
-    return response()->json(['data' => $incentive], 200);
-}
     /**
-  
+     * تحديث حافز معين
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Incentive  $incentive
@@ -65,14 +70,25 @@ public function show($id)
      */
     public function update(Request $request, Incentive $incentive)
     {
-       
+        $validator = Validator::make($request->all(), [
+            'IncentiveType' => 'string|max:255',
+            'Description' => 'nullable|string',
+            'Amount' => 'numeric',
+            'DateIssued' => 'date',
+            'EmployeeID' => 'exists:clients,id', // التحقق من صحة EmployeeID
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
         $incentive->update($request->all());
 
         return response()->json(['message' => 'تم تحديث الحافز بنجاح', 'data' => $incentive], 200);
     }
 
     /**
-   
+     * حذف حافز معين
      *
      * @param  \App\Models\Incentive  $incentive
      * @return \Illuminate\Http\JsonResponse

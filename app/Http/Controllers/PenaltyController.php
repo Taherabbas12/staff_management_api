@@ -21,6 +21,7 @@ class PenaltyController extends Controller
             'Description' => 'nullable|string',
             'PenaltyAmount' => 'required|numeric',
             'DateIssued' => 'required|date',
+            'EmployeeID' => 'required|exists:clients,id',
         ]);
 
         if ($validator->fails()) {
@@ -35,14 +36,14 @@ class PenaltyController extends Controller
     public function show($id)
     {
         $penalty = Penalty::find($id);
-    
+
         if (!$penalty) {
             return response()->json(['message' => 'الجزاء غير موجود'], 404);
         }
-    
+
         return response()->json(['data' => $penalty], 200);
     }
-    
+
     public function update(Request $request, Penalty $penalty)
     {
         $validator = Validator::make($request->all(), [
@@ -50,6 +51,7 @@ class PenaltyController extends Controller
             'Description' => 'nullable|string',
             'PenaltyAmount' => 'numeric',
             'DateIssued' => 'date',
+            'EmployeeID' => 'exists:clients,id',
         ]);
 
         if ($validator->fails()) {

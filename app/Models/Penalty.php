@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Penalty extends Model
 {    use HasFactory;
-    protected $primaryKey = 'PenaltyID'; 
+    protected $primaryKey = 'PenaltyID';
 
-    protected $fillable = [
+  protected $fillable = [
         'PenaltyType',
         'Description',
         'PenaltyAmount',
         'DateIssued',
+        'EmployeeID',
     ];
 }
